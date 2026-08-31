@@ -6,6 +6,7 @@ from later_api.schemas.resources import ResourceCreate
 
 def create_resouce(resource: ResourceCreate, session: Session):
     db_resource = Resource.model_validate(resource)
+    db_resource.category = "inbox"
 
     session.add(db_resource)
     session.commit()
