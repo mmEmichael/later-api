@@ -1,0 +1,20 @@
+[project]
+name = "later-api"
+version = "0.1.0"
+description = "An application for collecting and managing saves from multiple services."
+readme = "README.md"
+authors = [
+    { name = "Michail Maltsev", email = "mm.e.mihon.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi[standard]>=0.141.1",
+    "sqlmodel>=0.0.42",
+]
+
+[project.scripts]
+later-api = "later_api:main"
+
+[build-system]
+requires = ["uv_build>=0.12.3,<0.13.0"]
+build-backend = "uv_build"
