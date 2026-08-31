@@ -2,7 +2,7 @@ from fastapi import HTTPException
 from sqlmodel import Session, select
 
 from later_api.models.resources import Resource
-from later_api.schemas.resources import ResourceCreate
+from later_api.schemas.resources import ResourceCreate, ResourceEdit
 
 
 def create_resouce(resource: ResourceCreate, session: Session):
@@ -33,3 +33,15 @@ def delete_resource(id: int, session: Session):
     session.delete(resource)
     session.commit()
     return {"ok": True}
+
+
+def edit_resource(resource: ResourceEdit, session: Session):
+    resource_db = session.get(Resource, resource.id)
+    if not resource_db:
+        raise HTTPException(status_code=404, detail="Resource not found")
+    resource_data = resource.model_dump(exclude_unset=True)
+    _ = resource_db.sqlmodel_update(resource_data)
+    session.add(resource_db)
+    session.commit()
+    session.refresh(resource_db)
+    return resource_db

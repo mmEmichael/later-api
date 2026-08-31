@@ -4,9 +4,10 @@ from fastapi import APIRouter, Query
 
 from later_api.database.database import SessionDep
 from later_api.models.resources import Resource
-from later_api.schemas.resources import ResourceCreate
+from later_api.schemas.resources import ResourceCreate, ResourceEdit
 from later_api.services.resources import create_resouce as create_resource_service
 from later_api.services.resources import delete_resource as delete_resource_service
+from later_api.services.resources import edit_resource as edit_resource_service
 from later_api.services.resources import get_resources as get_resources_service
 from later_api.services.resources import (
     get_resources_by_id as get_resources_by_id_service,
@@ -51,3 +52,8 @@ async def delete_resource(resource_id: int, session: SessionDep):
     Удалаяет ресурс по id
     """
     return delete_resource_service(resource_id, session)
+
+
+@router.patch("/")
+async def edit_resource(resource: ResourceEdit, session: SessionDep):
+    return edit_resource_service(resource, session)
