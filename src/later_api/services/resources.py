@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from sqlmodel import Session, select
 
 from later_api.models.resources import Resource
@@ -13,6 +14,22 @@ def create_resouce(resource: ResourceCreate, session: Session):
     return db_resource
 
 
-def read_resources(session: Session, offset: int, limit: int):
+def get_resources(session: Session, offset: int, limit: int):
     resources = session.exec(select(Resource).offset(offset).limit(limit)).all()
     return resources
+
+
+def get_resources_by_id(id: int, session: Session):
+    resource = session.get(Resource, id)
+    if not resource:
+        raise HTTPException(status_code=404, detail="Hero not found")
+    return resource
+
+
+def delete_resource(id: int, session: Session):
+    resource = session.get(Resource, id)
+    if not resource:
+        raise HTTPException(status_code=404, detail="Hero not found")
+    session.delete(resource)
+    session.commit()
+    return {"ok": True}
