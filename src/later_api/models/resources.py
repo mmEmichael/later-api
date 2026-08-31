@@ -8,6 +8,6 @@ class Resource(SQLModel, table=True):
     url: str
     title: str = Field(index=True)
     source: str | None = Field(default=None)
-    category: str | None = Field(default=None)
+    category: str | None = Field(default="Inbox")
     status: str | None = Field(default=None)
     created_at: datetime = Field(default_factory=datetime.now)
