@@ -1,25 +1,29 @@
 from datetime import datetime
+from typing import Annotated
 
-from sqlmodel import SQLModel
+from pydantic import AfterValidator, AnyHttpUrl
+from sqlmodel import Field, SQLModel
+
+HttpUrlString = Annotated[AnyHttpUrl, AfterValidator(str)]
 
 
 class ResourceCreate(SQLModel):
-    url: str
-    title: str
+    url: HttpUrlString
+    title: str = Field(min_length=1, max_length=255)
 
 
 class ResourceEdit(SQLModel):
     id: int
-    url: str | None
-    title: str | None
-    source: str | None
-    category: str | None
-    status: str | None
+    url: HttpUrlString | None = None
+    title: str | None = Field(default=None, min_length=1, max_length=255)
+    source: str | None = None
+    category: str | None = None
+    status: str | None = None
 
 
 class ResourceRead(SQLModel):
     id: int
-    url: str
+    url: HttpUrlString
     title: str
     source: str
     category: str | None
