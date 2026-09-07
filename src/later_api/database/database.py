@@ -3,8 +3,8 @@ from typing import Annotated
 from fastapi import Depends
 from sqlmodel import Session, SQLModel, create_engine
 
-from later_api.config import settings
-from later_api.models.resources import (
+from src.later_api.config import settings
+from src.later_api.models.resources import (
     Resource,  # pyright: ignore[reportUnusedImport]  # noqa: F401
 )
 
