@@ -10,4 +10,4 @@ COPY src ./src
 RUN uv sync --frozen --no-dev
 
 
-CMD ["uv", "run", "fastapi", "run", "src/later_api/main.py", "--host", "0.0.0.0", "--port", "$PORT"]
+CMD sh -c "uv run uvicorn src.later_api.main:app --host 0.0.0.0 --port $PORT"
