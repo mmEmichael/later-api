@@ -1,8 +1,8 @@
 from fastapi import HTTPException
 from sqlmodel import Session, select
 
-from src.later_api.models.resources import Resource
-from src.later_api.schemas.resources import ResourceCreate, ResourceEdit
+from later_api.models.resources import Resource
+from later_api.schemas.resources import ResourceCreate, ResourceEdit
 
 
 def create_resouce(resource: ResourceCreate, session: Session):

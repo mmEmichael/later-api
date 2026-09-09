@@ -3,8 +3,8 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.later_api.api.resources import router as resources_router
-from src.later_api.database.database import create_db_and_tables
+from later_api.api.resources import router as resources_router
+from later_api.database.database import create_db_and_tables
 
 
 @asynccontextmanager

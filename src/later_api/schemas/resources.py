@@ -9,7 +9,7 @@ HttpUrlString = Annotated[AnyHttpUrl, AfterValidator(str)]
 
 class ResourceCreate(SQLModel):
     url: HttpUrlString
-    title: str = Field(min_length=1, max_length=255)
+    title: str | None = Field(min_length=1, max_length=255)
 
 
 class ResourceEdit(SQLModel):
