@@ -4,8 +4,14 @@ from fastapi import Depends
 from sqlmodel import Session, SQLModel, create_engine
 
 from later_api.config import settings
+from later_api.models.categories import (
+    Category,  # pyright: ignore[reportUnusedImport] # noqa: F401
+)
 from later_api.models.resources import (
     Resource,  # pyright: ignore[reportUnusedImport]  # noqa: F401
+)
+from later_api.models.sources import (
+    Source,  # pyright: ignore[reportUnusedImport]  # noqa: F401
 )
 
 engine = create_engine(settings.DATABASE_URL)

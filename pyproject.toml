@@ -24,3 +24,8 @@ build-backend = "uv_build"
 
 [tool.vercel]
 entrypoint = "src.later_api.main:app"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
