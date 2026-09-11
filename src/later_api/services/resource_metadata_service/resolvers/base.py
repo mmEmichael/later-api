@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from later_api.services.resource_metadata_service.resouce_metadata import (
+from later_api.services.resource_metadata_service.resource_metadata import (
     ResourceMetadata,
 )
 

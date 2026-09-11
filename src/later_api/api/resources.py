@@ -1,10 +1,13 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, BackgroundTasks, HTTPException, Query
 
 from later_api.database.database import SessionDep
 from later_api.models.resources import Resource
 from later_api.schemas.resources import ResourceCreate, ResourceEdit
+from later_api.services.resource_metadata_service.resource_metadata_service import (
+    fetch_and_save_metadata,
+)
 from later_api.services.resources import create_resouce as create_resource_service
 from later_api.services.resources import delete_resource as delete_resource_service
 from later_api.services.resources import edit_resource as edit_resource_service
@@ -17,7 +20,11 @@ router = APIRouter(prefix="/resources")
 
 
 @router.post("", response_model=Resource)
-async def create_resource(resource: ResourceCreate, session: SessionDep):
+async def create_resource(
+    resource: ResourceCreate,
+    session: SessionDep,
+    background_tasks: BackgroundTasks,
+):
     """
     1. принимает URL;
     2. определяет источник;
@@ -25,7 +32,11 @@ async def create_resource(resource: ResourceCreate, session: SessionDep):
     4. добавляет его в Inbox.
 
     """
-    return create_resource_service(resource, session)
+    created = create_resource_service(resource, session)
+    if created.id is None:
+        raise HTTPException(status_code=500, detail="Resource was not persisted")
+    background_tasks.add_task(fetch_and_save_metadata, created.id, str(resource.url))
+    return created
 
 
 @router.get("")

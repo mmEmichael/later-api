@@ -22,14 +22,14 @@ def get_resources(session: Session, offset: int, limit: int):
 def get_resources_by_id(id: int, session: Session):
     resource = session.get(Resource, id)
     if not resource:
-        raise HTTPException(status_code=404, detail="Hero not found")
+        raise HTTPException(status_code=404, detail="Resource not found")
     return resource
 
 
 def delete_resource(id: int, session: Session):
     resource = session.get(Resource, id)
     if not resource:
-        raise HTTPException(status_code=404, detail="Hero not found")
+        raise HTTPException(status_code=404, detail="Resource not found")
     session.delete(resource)
     session.commit()
     return {"ok": True}
