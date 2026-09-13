@@ -1,20 +1,10 @@
-from contextlib import asynccontextmanager
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from later_api.api.resources import router as resources_router
 from later_api.config import settings
-from later_api.database.database import create_db_and_tables
 
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):  # pyright: ignore[reportUnusedParameter]
-    create_db_and_tables()
-    yield
-
-
-app = FastAPI(lifespan=lifespan)
+app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,

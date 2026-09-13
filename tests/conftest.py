@@ -36,7 +36,6 @@ def client_fixture(
     """
     HTTP client against the real FastAPI app, but with:
     - test SQLite instead of Postgres
-    - no schema create on the real DATABASE_URL
     - background metadata writing into the same test DB
     """
 
@@ -44,7 +43,6 @@ def client_fixture(
         with Session(engine) as session:
             yield session
 
-    monkeypatch.setattr("later_api.main.create_db_and_tables", lambda: None)
     monkeypatch.setattr(
         "later_api.services.resource_metadata_service.resource_metadata_service.engine",
         engine,

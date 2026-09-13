@@ -9,6 +9,7 @@ engine = create_engine(settings.DATABASE_URL)
 
 
 def create_db_and_tables() -> None:
+    """Create tables from models. Used in tests; production uses Alembic migrations."""
     SQLModel.metadata.create_all(engine)
 
 

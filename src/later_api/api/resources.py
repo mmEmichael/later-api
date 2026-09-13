@@ -11,7 +11,9 @@ from later_api.services.resource_metadata_service.resource_metadata_service impo
 from later_api.services.resources import create_resource as create_resource_service
 from later_api.services.resources import delete_resource as delete_resource_service
 from later_api.services.resources import edit_resource as edit_resource_service
-from later_api.services.resources import get_resource_by_id as get_resource_by_id_service
+from later_api.services.resources import (
+    get_resource_by_id as get_resource_by_id_service,
+)
 from later_api.services.resources import get_resources as get_resources_service
 
 router = APIRouter(prefix="/resources")
@@ -61,9 +63,7 @@ async def delete_resource(resource_id: int, session: SessionDep):
 
 
 @router.patch("/{resource_id}", response_model=ResourceRead)
-async def edit_resource(
-    resource_id: int, resource: ResourceEdit, session: SessionDep
-):
+async def edit_resource(resource_id: int, resource: ResourceEdit, session: SessionDep):
     """Update fields of an existing resource."""
     try:
         return edit_resource_service(resource_id, resource, session)
