@@ -59,4 +59,8 @@ docker compose up --build
 
 ```bash
 uv run pytest
+# or with details:
+uv run pytest -v
 ```
+
+Tests use in-memory SQLite and do not need Postgres or the internet.
