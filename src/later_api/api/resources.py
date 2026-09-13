@@ -4,6 +4,7 @@ from fastapi import APIRouter, BackgroundTasks, HTTPException, Query
 
 from later_api.api.deps import SessionDep
 from later_api.exceptions import NotFoundError
+from later_api.models.resources import ResourceStatus
 from later_api.schemas.resources import ResourceCreate, ResourceEdit, ResourceRead
 from later_api.services.resource_metadata_service.resource_metadata_service import (
     fetch_and_save_metadata,
@@ -37,10 +38,22 @@ async def create_resource(
 
 @router.get("", response_model=list[ResourceRead])
 async def get_resources(
-    session: SessionDep, offset: int = 0, limit: Annotated[int, Query(le=100)] = 100
+    session: SessionDep,
+    offset: int = 0,
+    limit: Annotated[int, Query(le=100)] = 100,
+    status: ResourceStatus | None = None,
+    source_id: int | None = None,
+    category_id: int | None = None,
 ):
-    """Return a paginated list of resources."""
-    return get_resources_service(session, offset, limit)
+    """Return a paginated list of resources with optional filters."""
+    return get_resources_service(
+        session,
+        offset,
+        limit,
+        status=status,
+        source_id=source_id,
+        category_id=category_id,
+    )
 
 
 @router.get("/{resource_id}", response_model=ResourceRead)

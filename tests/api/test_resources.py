@@ -98,3 +98,67 @@ def test_delete_resource_not_found(client: TestClient) -> None:
     response = client.delete("/resources/999")
 
     assert response.status_code == 404
+
+
+def test_filter_resources_by_status(client: TestClient) -> None:
+    unread = client.post(
+        "/resources",
+        json={"url": "https://example.com/unread"},
+    ).json()
+    read = client.post(
+        "/resources",
+        json={"url": "https://example.com/read"},
+    ).json()
+    client.patch(f"/resources/{read['id']}", json={"status": "read"})
+
+    response = client.get("/resources", params={"status": "read"})
+
+    assert response.status_code == 200
+    ids = [item["id"] for item in response.json()]
+    assert read["id"] in ids
+    assert unread["id"] not in ids
+
+
+def test_filter_resources_by_category_id(client: TestClient) -> None:
+    category = client.post("/categories", json={"name": "filter-me"}).json()
+    with_category = client.post(
+        "/resources",
+        json={"url": "https://example.com/in-category"},
+    ).json()
+    without_category = client.post(
+        "/resources",
+        json={"url": "https://example.com/no-category"},
+    ).json()
+    client.patch(
+        f"/resources/{with_category['id']}",
+        json={"category_id": category["id"]},
+    )
+
+    response = client.get(
+        "/resources",
+        params={"category_id": category["id"]},
+    )
+
+    assert response.status_code == 200
+    ids = [item["id"] for item in response.json()]
+    assert with_category["id"] in ids
+    assert without_category["id"] not in ids
+
+
+def test_filter_resources_by_source_id(client: TestClient) -> None:
+    first = client.post(
+        "/resources",
+        json={"url": "https://example.com/source-a"},
+    ).json()
+    second = client.post(
+        "/resources",
+        json={"url": "https://example.com/source-b"},
+    ).json()
+    client.patch(f"/resources/{first['id']}", json={"source_id": 42})
+
+    response = client.get("/resources", params={"source_id": 42})
+
+    assert response.status_code == 200
+    ids = [item["id"] for item in response.json()]
+    assert first["id"] in ids
+    assert second["id"] not in ids
