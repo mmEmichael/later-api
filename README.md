@@ -16,6 +16,9 @@ API for collecting and managing saved links from multiple services.
 cp .env.example .env
 ```
 
+For local runs (API and Alembic on your machine), use `localhost` in `DATABASE_URL`,
+not `db` (that hostname only works inside Docker Compose).
+
 2. Install dependencies:
 
 ```bash
@@ -28,10 +31,13 @@ uv sync
 docker compose up db -d
 ```
 
-Make sure `DATABASE_URL` in `.env` points at that database
-(for local runs outside Compose, use `localhost` instead of `db`).
+4. Apply database migrations:
 
-4. Run the API:
+```bash
+uv run alembic upgrade head
+```
+
+5. Run the API:
 
 ```bash
 uv run later-api
@@ -47,6 +53,30 @@ API docs: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 docker compose up --build
 ```
 
+The API container runs `alembic upgrade head` before starting the server.
+
+## Database migrations (Alembic)
+
+Schema changes go through migrations, not `create_all`.
+
+```bash
+# apply all migrations
+uv run alembic upgrade head
+
+# show current revision
+uv run alembic current
+
+# after changing SQLModel tables, generate a new migration (review it!)
+uv run alembic revision --autogenerate -m "describe change"
+```
+
+If the database already has tables from an older `create_all` setup and matches
+the current models, mark it as up to date without re-running SQL:
+
+```bash
+uv run alembic stamp head
+```
+
 ## Environment variables
 
 | Variable | Description |
@@ -59,4 +89,8 @@ docker compose up --build
 
 ```bash
 uv run pytest
+# or with details:
+uv run pytest -v
 ```
+
+Tests use in-memory SQLite (`create_all`) and do not need Postgres, Alembic, or the internet.

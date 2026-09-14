@@ -1,7 +1,7 @@
 from sqlmodel import Session, select
 
 from later_api.exceptions import NotFoundError
-from later_api.models.resources import Resource
+from later_api.models.resources import Resource, ResourceStatus
 from later_api.schemas.resources import ResourceCreate, ResourceEdit
 
 
@@ -14,8 +14,26 @@ def create_resource(resource: ResourceCreate, session: Session) -> Resource:
     return db_resource
 
 
-def get_resources(session: Session, offset: int, limit: int) -> list[Resource]:
-    return list(session.exec(select(Resource).offset(offset).limit(limit)).all())
+def get_resources(
+    session: Session,
+    offset: int,
+    limit: int,
+    *,
+    status: ResourceStatus | None = None,
+    source_id: int | None = None,
+    category_id: int | None = None,
+) -> list[Resource]:
+    statement = select(Resource)
+
+    if status is not None:
+        statement = statement.where(Resource.status == status)
+    if source_id is not None:
+        statement = statement.where(Resource.source_id == source_id)
+    if category_id is not None:
+        statement = statement.where(Resource.category_id == category_id)
+
+    statement = statement.offset(offset).limit(limit)
+    return list(session.exec(statement).all())
 
 
 def get_resource_by_id(resource_id: int, session: Session) -> Resource:
