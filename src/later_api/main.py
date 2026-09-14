@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from later_api.api.categories import router as categories_router
 from later_api.api.resources import router as resources_router
+from later_api.api.sources import router as sources_router
 from later_api.config import settings
 
 app = FastAPI()
@@ -17,6 +18,7 @@ app.add_middleware(
 
 app.include_router(resources_router)
 app.include_router(categories_router)
+app.include_router(sources_router)
 
 
 def run() -> None:
