@@ -9,6 +9,9 @@ from later_api.models.sources import Source
 from later_api.services.resource_metadata_service.resolvers.reddit_resolver import (
     RedditResolver,
 )
+from later_api.services.resource_metadata_service.resolvers.youtube_resolver import (
+    YoutubeResolver,
+)
 from later_api.services.resource_metadata_service.resource_metadata import (
     ResourceMetadata,
 )
@@ -17,6 +20,7 @@ logger = logging.getLogger(__name__)
 
 resolvers = [
     RedditResolver(),
+    YoutubeResolver(),
 ]
 
 
