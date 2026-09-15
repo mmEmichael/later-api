@@ -2,7 +2,8 @@ from datetime import datetime
 from enum import Enum
 from typing import TYPE_CHECKING, Optional
 
-from sqlmodel import Field, Relationship, SQLModel
+from sqlalchemy import Enum as SAEnum
+from sqlmodel import Column, Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
     from later_api.models.categories import Category
@@ -31,7 +32,14 @@ class Resource(SQLModel, table=True):
 
     status: ResourceStatus = Field(
         default=ResourceStatus.UNREAD,
-        index=True,
+        sa_column=Column(
+            SAEnum(
+                ResourceStatus,
+                values_callable=lambda enum: [item.value for item in enum],
+            ),
+            nullable=False,
+            index=True,
+        ),
     )
 
     created_at: datetime = Field(default_factory=datetime.now)
